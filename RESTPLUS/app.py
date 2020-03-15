@@ -96,9 +96,15 @@ class Products(Resource):
 			jsonResult = vars(ProductModel(result[0][1],result[0][2],result[0][3],result[0][4]))
 			return "Product id: "+idToUpdate+" is updated. "+str(jsonResult), 200
 
-# @productRoutes.route('/product')
-# class Products(Resource):
-# 	def post(self,)
+@productRoutes.route('/product')
+class Products(Resource):
+	@productRoutes.expect(product)
+	def post(self):
+		'''Adds a product into the database.'''
+		productToAdd = [request.json.get('name'), request.json.get('description'), str(request.json.get('price')), str(request.json.get('qty'))]
+		addProduct = "INSERT INTO products (name, description, price, qty) VALUES ('"+productToAdd[0]+"', '"+productToAdd[1]+"', "+productToAdd[2]+", "+productToAdd[3]+");"
+		execute_query(addProduct)
+		return "The product has been added.", 200
 
 
 # Run Server
