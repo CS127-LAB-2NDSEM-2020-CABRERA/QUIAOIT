@@ -63,7 +63,7 @@ class Products(Resource):
 		infoToSearch = "SELECT * from products WHERE id="+searchedID
 		result = execute_read_query(infoToSearch)
 		if len(result) == 0:
-			return "There is no recorded info on the given id number. It is possible that it is already deleted.", 200
+			return "There is no recorded info on the given id number. It is possible that it is already deleted.", 404
 		else:
 			jsonResult = vars(ProductModel(result[0][1],result[0][2],result[0][3],result[0][4]))
 			return jsonResult, 200
@@ -74,7 +74,7 @@ class Products(Resource):
 		infoToSearch = "SELECT * from products WHERE id="+idToDelete
 		result = execute_read_query(infoToSearch)
 		if len(result) == 0:
-			return "Nothing to delete. Since, it is empty.", 304
+			return "Nothing to delete. Since, it is empty.", 404
 		else:
 			idToSearch = "DELETE FROM products WHERE id="+idToDelete
 			execute_query(idToSearch)
@@ -87,7 +87,7 @@ class Products(Resource):
 		infoToSearch = "SELECT * from products WHERE id="+idToUpdate
 		result = execute_read_query(infoToSearch)
 		if len(result) == 0:
-			return "Cannot update", 304
+			return "Cannot update", 404
 		else:
 			updatedInfo = [request.json.get('name'), request.json.get('description'), str(request.json.get('price')), str(request.json.get('qty'))]
 			updateID = "UPDATE products SET name ='"+updatedInfo[0]+"', description ='"+updatedInfo[1]+"', price ="+updatedInfo[2]+", qty ="+updatedInfo[3]+" WHERE id="+idToUpdate
